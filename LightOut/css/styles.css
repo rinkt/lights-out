@@ -1,0 +1,158 @@
+/* common */
+body {
+  background: #ccc;
+  color: #fff;
+  font-family: 'Courier New', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* main */
+
+#container {
+  /* 50px * 4 + 10px * 2 */
+  width: 220px;
+  margin: 16px auto;
+}
+
+#container h1 {
+  text-align: center;
+  letter-spacing: 0.2em;
+  margin-bottom: 8px;
+  cursor: pointer;
+  user-select: none;
+  background: #5936f4;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+#board {
+  margin: 0 0 8px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 4px;
+}
+
+#board ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+}
+
+#board li {
+  background: #00aaff;
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  line-height: 40px;
+  text-align: center;
+  box-shadow: 0 4px 0 #0088cc;
+  user-select: none;
+}
+
+#board li.pressed {
+  background: #ccc;
+  box-shadow: none;
+  margin-top: 9px;
+  margin-bottom: 1px;
+}
+
+#btn {
+  margin-bottom: 20px;
+  cursor: pointer;
+  user-select: none;
+  background: #f44336;
+  padding: 8px;
+  border-radius: 4px;
+  text-align: center;
+  box-shadow: 0 4px 0 #d1483e;
+  font-size: 24px;
+  letter-spacing: 0.4em;
+}
+
+#timer {
+  font-size: 20px;
+  text-align: center;
+}
+
+#btn:active {
+  margin-top: 12px;
+  margin-bottom: 16px;
+  box-shadow: none;
+}
+
+/* congratulations */
+
+#open, #other {
+  cursor: pointer;
+  width: 240px;
+  margin: 16px auto 0;
+  background: #29d345;
+  padding: 8px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 18px;
+}
+
+#close {
+  cursor: pointer;
+  width: 240px;
+  margin: 0 auto;
+  padding: 8px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 16px;
+  color: #111;
+  font-weight: normal;
+}
+
+#mask {
+  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#congratulations {
+  background: #fff;
+  width: 300px;
+  padding: 20px;
+  padding-bottom: 10px;
+  border-radius: 4px;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  transition: transform .4s;
+  z-index: 2;
+}
+
+#congratulations > p {
+  text-align: center;
+  color: #5936f4;
+  font-size: 24px;
+  letter-spacing: 0.1em;
+  margin: 0 0 10px;
+}
+
+#congratulations a,
+#congratulations a:visited {
+  text-decoration: none;
+  color: #fff;
+}
+
+#mask.hidden {
+  display: none;
+}
+
+#congratulations.hidden {
+  transform: translate(0, -500px);
+}

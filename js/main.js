@@ -1,174 +1,71 @@
 'use strict';
 
 {
-  class Panel {
-    constructor(row, col, game) {
-      this.game = game;
-      this.row = row;
-      this.col = col;
-      this.el = document.createElement('li');
-      this.el.classList.add('pressed');
-      this.el.addEventListener('click', () => {
-        this.press(this.row, this.col);
-        this.press(this.row - 1, this.col);
-        this.press(this.row + 1, this.col);
-        this.press(this.row, this.col - 1);
-        this.press(this.row, this.col + 1);
-        this.check();
+  const next =document.getElementById('next');
+  const prev =document.getElementById('prev');
+  const ul = document.querySelector('ul');
+  const slides = ul.children;
+  const dots = [];
+  let currentIndex = 0;
 
-      });
-    }
-    
-    getEl() {
-      return this.el;
-    }
-    
-    activate() {
-      this.el.classList.remove('pressed');
-    }
+  function updateButtons() {
+    prev.classList.remove('hidden');
+    next.classList.remove('hidden');
 
-    press(row, col) {
-      if (row < 0 || col < 0 || row > this.game.getLevel() - 1 || col > this.game.getLevel() - 1){
-        return;
-      }
-
-      const ul = document.querySelectorAll('ul')[row];
-      const li = ul.querySelectorAll('li')[col];
-      if (li.classList.contains('pressed')) {
-        li.classList.remove('pressed');
-      } else {
-        li.classList.add('pressed');
-      }
+    if (currentIndex === 0) {
+      prev.classList.add('hidden');
     }
-
-    check() {
-      if (!this.game.isRunning) {
-        return;
-      }
-      for (let row = 0; row < this.game.getLevel(); row++) {
-        const ul = document.querySelectorAll('ul')[row];
-        for (let col = 0; col < this.game.getLevel(); col++) {
-          const li = ul.querySelectorAll('li')[col];
-          if (!li.classList.contains('pressed')) {
-            return;
-          } 
-        }
-      }
-      clearTimeout(this.game.getTimeoutId());
-      const congratulations = document.getElementById('congratulations');
-      congratulations.classList.remove('hidden');
-      mask.classList.remove('hidden');
-      this.game.isRunning = false;
+    if (currentIndex === slides.length - 1) {
+      next.classList.add('hidden');
     }
   }
 
-  class Board {
-    constructor(game) {
-      this.game = game;
-      this.panels = [];
-      this.setup();
-    }
-    
-    setup() {
-      const board = document.getElementById('board');
-      for (let row = 0; row < this.game.getLevel(); row++) {
-        const ul = document.createElement('ul');
-        board.appendChild(ul);
-        for (let col = 0; col < this.game.getLevel(); col++) {
-          this.panels.push(new Panel(row, col, this.game));
-          board.children[row].appendChild(this.panels[row * this.game.getLevel() + col].getEl());
-        }
-      }
-    }
-
-    activate() {
-      this.panels.forEach(panel => {
-        panel.activate();
-      });
-      for (let i = 0; i < this.game.getLevel() ** 2; i++) {
-        const row = Math.floor(Math.random() * this.game.getLevel());
-        const col = Math.floor(Math.random() * this.game.getLevel());
-        this.press(row, col);
-        this.press(row - 1, col);
-        this.press(row + 1, col);
-        this.press(row, col - 1);
-        this.press(row, col + 1);
-      }
-    }
-
-    press(row, col) {
-      if (row < 0 || col < 0 || row > this.game.getLevel() - 1 || col > this.game.getLevel() - 1){
-        return;
-      }
-
-      const ul = document.querySelectorAll('ul')[row];
-      const li = ul.querySelectorAll('li')[col];
-      if (li.classList.contains('pressed')) {
-        li.classList.remove('pressed');
-      } else {
-        li.classList.add('pressed');
-      }
-    }
+  function moveSlides() {
+    const slideWidth = slides[0].getBoundingClientRect().width;
+    ul.style.transform = `translateX(${-1 * slideWidth * currentIndex}px)`;
   }
 
-  class Game {
-    constructor(level) {
-      this.level = level;
-      this.board = new Board(this);
-
-      this.startTime = undefined;
-      this.timeoutId = undefined;
-      this.isRunning = false;
-      
-      const btn = document.getElementById('btn');
-      btn.addEventListener('click', () => {
-        this.start();
+  function setupDots() {
+    for (let i =0; i < slides.length; i++) {
+      const button = document.createElement('button');
+      button.addEventListener('click', () => {
+        currentIndex = i;
+        updateDots();
+        updateButtons();
+        moveSlides();
       });
-      this.setup();
+      dots.push(button);
+      document.querySelector('nav').appendChild(button);
     }
-
-    setup() {
-      const container = document.getElementById('container');
-      const PANEL_WIDTH = 50;
-      const BOARD_PADDING = 10;
-      container.style.width = PANEL_WIDTH * this.level + BOARD_PADDING * 2 + 'px';
-
-      const congratulations = document.getElementById('congratulations');
-      const TITLE_HIEGHT = 43;
-      const CONG_HIEGHT = 109;
-      congratulations.style.top = TITLE_HIEGHT + BOARD_PADDING + PANEL_WIDTH * this.level / 2 - CONG_HIEGHT / 4 + 'px';
-    }
-
-    start() {
-      if (typeof this.timeoutId !== 'undefined') {
-        clearTimeout(this.timeoutId);
-      }
-
-      this.board.activate();
-      this.isRunning = true;
-
-      this.startTime = Date.now();
-      this.runTimer();
-    }
-
-    runTimer() {
-      const timer = document.getElementById('timer');
-      timer.textContent = ((Date.now() - this.startTime) / 1000).toFixed(2);
     
-      this.timeoutId = setTimeout(() => {
-        this.runTimer();
-      }, 10);
-    }
-
-    getTimeoutId() {
-      return this.timeoutId;
-    }
-
-    getLevel() {
-      return this.level;
-    }
-
+    dots[0].classList.add('current');
   }
+  
+  function updateDots() {
+    dots.forEach(dot => {
+      dot.classList.remove('current');
+    });
+    dots[currentIndex].classList.add('current');
+  }
+  
+  updateButtons();
+  setupDots();
+  
+  next.addEventListener('click', () => {
+    currentIndex ++;
+    updateDots();
+    updateButtons();
+    moveSlides();
+  });
 
-  new Game(4);
+  prev.addEventListener('click', () => {
+    currentIndex --;
+    updateDots();
+    updateButtons();
+    moveSlides();
+  });
+
+  window.addEventListener('resize', () => {
+    moveSlides();
+  });
 }
