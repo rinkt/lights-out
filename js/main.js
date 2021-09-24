@@ -52,6 +52,9 @@
         }
       }
       clearTimeout(this.game.getTimeoutId());
+      const congratulations = document.getElementById('congratulations');
+      congratulations.classList.remove('hidden');
+      mask.classList.remove('hidden');
     }
   }
 
@@ -124,6 +127,12 @@
       const PANEL_WIDTH = 50;
       const BOARD_PADDING = 10;
       container.style.width = PANEL_WIDTH * this.level + BOARD_PADDING * 2 + 'px';
+
+      const congratulations = document.getElementById('congratulations');
+      const TITLE_HIEGHT = 43;
+      const CONG_HIEGHT = 109;
+      // congratulations.style.top = TITLE_HIEGHT + BOARD_PADDING + PANEL_WIDTH * this.level / 2  + 'px';
+      congratulations.style.top = TITLE_HIEGHT + BOARD_PADDING + PANEL_WIDTH * this.level / 2 - CONG_HIEGHT / 4 + 'px';
     }
 
     start() {
@@ -156,5 +165,5 @@
 
   }
 
-  new Game(6);
+  new Game(4);
 }
