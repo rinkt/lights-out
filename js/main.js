@@ -42,6 +42,9 @@
     }
 
     check() {
+      if (!this.game.isRunning) {
+        return;
+      }
       for (let row = 0; row < this.game.getLevel(); row++) {
         const ul = document.querySelectorAll('ul')[row];
         for (let col = 0; col < this.game.getLevel(); col++) {
@@ -55,6 +58,7 @@
       const congratulations = document.getElementById('congratulations');
       congratulations.classList.remove('hidden');
       mask.classList.remove('hidden');
+      this.game.isRunning = false;
     }
   }
 
@@ -114,6 +118,7 @@
 
       this.startTime = undefined;
       this.timeoutId = undefined;
+      this.isRunning = false;
       
       const btn = document.getElementById('btn');
       btn.addEventListener('click', () => {
@@ -131,7 +136,6 @@
       const congratulations = document.getElementById('congratulations');
       const TITLE_HIEGHT = 43;
       const CONG_HIEGHT = 109;
-      // congratulations.style.top = TITLE_HIEGHT + BOARD_PADDING + PANEL_WIDTH * this.level / 2  + 'px';
       congratulations.style.top = TITLE_HIEGHT + BOARD_PADDING + PANEL_WIDTH * this.level / 2 - CONG_HIEGHT / 4 + 'px';
     }
 
@@ -141,6 +145,7 @@
       }
 
       this.board.activate();
+      this.isRunning = true;
 
       this.startTime = Date.now();
       this.runTimer();
