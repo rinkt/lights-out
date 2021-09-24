@@ -28,7 +28,7 @@
     }
 
     press(row, col) {
-      if (row < 0 || col < 0 || row > 3 || col > 3){
+      if (row < 0 || col < 0 || row > this.game.getLevel() - 1 || col > this.game.getLevel() - 1){
         return;
       }
 
@@ -42,9 +42,9 @@
     }
 
     check() {
-      for (let row = 0; row < 4; row++) {
+      for (let row = 0; row < this.game.getLevel(); row++) {
         const ul = document.querySelectorAll('ul')[row];
-        for (let col = 0; col < 4; col++) {
+        for (let col = 0; col < this.game.getLevel(); col++) {
           const li = ul.querySelectorAll('li')[col];
           if (!li.classList.contains('pressed')) {
             return;
@@ -64,12 +64,12 @@
     
     setup() {
       const board = document.getElementById('board');
-      for (let row = 0; row < 4; row++) {
+      for (let row = 0; row < this.game.getLevel(); row++) {
         const ul = document.createElement('ul');
         board.appendChild(ul);
-        for (let col = 0; col < 4; col++) {
+        for (let col = 0; col < this.game.getLevel(); col++) {
           this.panels.push(new Panel(row, col, this.game));
-          board.children[row].appendChild(this.panels[row * 4 + col].getEl());
+          board.children[row].appendChild(this.panels[row * this.game.getLevel() + col].getEl());
         }
       }
     }
@@ -78,9 +78,9 @@
       this.panels.forEach(panel => {
         panel.activate();
       });
-      for (let i = 0; i < 20; i++) {
-        const row = Math.floor(Math.random() * 4);
-        const col = Math.floor(Math.random() * 4);
+      for (let i = 0; i < this.game.getLevel() ** 2; i++) {
+        const row = Math.floor(Math.random() * this.game.getLevel());
+        const col = Math.floor(Math.random() * this.game.getLevel());
         this.press(row, col);
         this.press(row - 1, col);
         this.press(row + 1, col);
@@ -90,7 +90,7 @@
     }
 
     press(row, col) {
-      if (row < 0 || col < 0 || row > 3 || col > 3){
+      if (row < 0 || col < 0 || row > this.game.getLevel() - 1 || col > this.game.getLevel() - 1){
         return;
       }
 
@@ -105,7 +105,8 @@
   }
 
   class Game {
-    constructor() {
+    constructor(level) {
+      this.level = level;
       this.board = new Board(this);
 
       this.startTime = undefined;
@@ -115,6 +116,14 @@
       btn.addEventListener('click', () => {
         this.start();
       });
+      this.setup();
+    }
+
+    setup() {
+      const container = document.getElementById('container');
+      const PANEL_WIDTH = 50;
+      const BOARD_PADDING = 10;
+      container.style.width = PANEL_WIDTH * this.level + BOARD_PADDING * 2 + 'px';
     }
 
     start() {
@@ -141,7 +150,11 @@
       return this.timeoutId;
     }
 
+    getLevel() {
+      return this.level;
+    }
+
   }
 
-  new Game();
+  new Game(6);
 }

@@ -12,6 +12,17 @@ body {
   margin: 16px auto;
 }
 
+h1 {
+  text-align: center;
+  letter-spacing: 0.2em;
+  margin-bottom: 8px;
+  cursor: pointer;
+  user-select: none;
+  background: #5936f4;
+  padding: 8px;
+  border-radius: 4px;
+}
+
 #board {
   margin: 0 0 8px;
   padding: 10px;
